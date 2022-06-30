@@ -1,13 +1,14 @@
 import mlflow
+import joblib
 from mlflow.tracking import MlflowClient
 from memoized_property import memoized_property
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.svm import SVR
+# from sklearn.svm import SVR
 from sklearn.compose import ColumnTransformer
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.model_selection import train_test_split, RandomizedSearchCV, GridSearchCV
 from TaxiFareModel.encoders import TimeFeaturesEncoder, DistanceTransformer
 from TaxiFareModel.utils import compute_rmse
 from TaxiFareModel.data import get_data, clean_data
@@ -95,13 +96,23 @@ if __name__ == "__main__":
 
     model_list = [LinearRegression(),Lasso(),Ridge(), RandomForestRegressor()]
     svm_list = ['linear', 'poly', 'rbf', 'sigmoid']
+    params= {
+        # "RandomForestRegressor__max_depth":[1,2,3,4,5,6,7,8,9,10],
+        # "RandomForestRegressor__min_samples_split":[2,3,4,5],
+        "RandomForestRegressor__max_features":[None,"sqrt","log2",0.3,0.2,0.1,0.4,0.5],
+        "RandomForestRegressor__min_impurity_decrease":[0.0,0.2,0.4,0.6,0.8,1.0],
+        "RandomForestRegressor__n_estimators":[20,40,60,80,100,120,140,160,180,200],
+        "RandomForestRegressor__min_samples_leaf":[1,2,3,4,5,6,7,8,9,10]
+        # "RandomForestRegressor__min_weight_fraction_leaf":[0.0,0.1,0.2,0.3,0.4,0.5],
+        # "RandomForestRegressor__max_leaf_nodes":[None,2,3,4,5,6,7,8,9,10]
+    }
 
     """
     Do a initial run test on 10_000 samples to
     identify the better machine learning model
     """
 
-    # for i in range(10):
+    # for i in range(30):
     #     for svm in svm_list:
 
     #         # build pipeline
@@ -115,24 +126,19 @@ if __name__ == "__main__":
     #         trainer.mlflow_log_metric("rmse",rmse)
     #         trainer.mlflow_log_param("model",f"SVM - {str(svm)}")
 
-    #     print(f'round {1+i}')
+        # # build pipeline
+        # trainer = Trainer(X_train,y_train)
 
-    params= {
-        #  "RandomForestRegressor__max_depth":[1,2,3,4,5,6,7,8,9,10],
-        #  "RandomForestRegressor__min_samples_split":[2,3,4,5],
-            "RandomForestRegressor__max_features":[None,"sqrt","log2",0.3,0.2,0.1,0.4,0.5],
-            "RandomForestRegressor__min_impurity_decrease":[0.0,0.2,0.4,0.6,0.8,1.0],
-            "RandomForestRegressor__n_estimators":[20,40,60,80,100,120,140,160,180,200],
-            "RandomForestRegressor__min_samples_leaf":[1,2,3,4,5,6,7,8,9,10]}
-        #  "RandomForestRegressor__min_weight_fraction_leaf":[0.0,0.1,0.2,0.3,0.4,0.5],
-        #  "RandomForestRegressor__max_leaf_nodes":[None,2,3,4,5,6,7,8,9,10]}
+        # # train the pipeline
+        # trainer.run(RandomForestRegressor(),params)
+
+        # # evaluate the pipeline
+        # trainer.mlflow_log_metric("rmse",trainer.pipeline.best_score_)
+        # trainer.mlflow_log_param("best_params",f"{trainer.pipeline.best_params_}")
+        # print(f'round {1+i}')
 
     # build pipeline
     trainer = Trainer(X_train,y_train)
 
     # train the pipeline
     trainer.run(RandomForestRegressor(),params)
-
-    # evaluate the pipeline
-    trainer.mlflow_log_metric("rmse",trainer.pipeline.best_score_)
-    trainer.mlflow_log_param("best_params",f"{trainer.pipeline.best_params_}")
