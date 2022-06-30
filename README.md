@@ -24,7 +24,9 @@ Initial exploration of data is conducted by dropping of outliers, illogical data
   <img width="460" height="300" src="image/corr_fare-vs-feature.png"/><img height="300"  src="image/corr-value.png"/>
 </p>
 
-Please note that the longitude and latitude is used to calculate the distance and therefore not taken into consideration during analysis of correlation of individual features. A quick showcase of the average taxi fare when compiled against by passenger count or day of week, it shows that the average are almost similar. This shows the effect of passenger count and day of week on the taxi fare is minimal.
+Please note that the distance is calculated using longitude and latitude and therefore not taken into consideration during analysis of correlation of individual features. Else parameters like day of week, hour, month, years are all extracted from pickup timing. 
+
+A quick showcase of the average taxi fare when compiled against by passenger count or day of week, both shows that the average taxi fare are more or less the same. This shows the effect of passenger count and day of week on the taxi fare is minimal.
 
 <p align="center">
   <img width="600" height="200" src="image/avg_fare-by-ppl.png"/>
@@ -39,6 +41,7 @@ Else, if compared to the scatter plot of the taxi fare when plotted against dist
 </p>
 
 The second feature most highly correlated with fare amount will be year attribute extracted from pick up time. This is presume due to the rising taxi fare cost by inflation. The correlation of year and taxi fare is only around 11%.
+
 ![image](image/fare-vs-year.png)
 
 # 2. Model building and training
