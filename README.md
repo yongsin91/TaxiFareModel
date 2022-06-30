@@ -43,4 +43,5 @@ The second feature most highly correlated with fare amount will be year attribut
 
 # 2. Model building and training
 A pipeline was build using scikit-learn. It includes distance transformer for distance calculation, standardscaler for standardization, and one hot encoding for the features extracted from the pickup time.  
-RandomizedSearchCV is used to determine the best model, and RandomForestRegressor is shown to have the best result, an average RMSE of 4.298. The optimum hyperparameters is also determined using the same method. Tuned model after train_test_split the data to train and evaluate is able to achieve RMSE of 4.376. 
+RandomizedSearchCV is used to determine the best model, and MLflow is being used to track all the parameters results. After comparison, RandomForestRegressor is shown to have the best result, an average RMSE of 4.298. The optimum hyperparameters is also determined using the same method. Tuned model after train_test_split of 0.15, the model after train and evaluate is able to achieve RMSE of 4.376. 
+
