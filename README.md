@@ -1,74 +1,50 @@
-# Data analysis
-- Document here the project: TaxiFareModel
-- Description: Project Description
-- Data Source:
-- Type of analysis:
+# NYC - Taxi Fare Prediction 
+This project an attempt to build a complete package on predicting the New York Taxi Fare (inclusive of tols), based on the [Kaggle Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction). This is a playground competition, hosted in partnership with Google Cloud and Coursera.
+While basic estimate based on just the distance between the two points will result in an RMSE of $5-$8, depending on the model used. The challenge is to do better using Machine Learning techniques!
 
-Please document the project the better you can.
+Original Train and Test file can be found through this kaggle [link](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction/data). It is not uploaded due to the file size (5GB). 
 
-# Startup the project
+# File Description
+1. TaxiFareModel contains all the necessary .py file for training of the model. 
+    1. \_init\_.py - for indication of this whole folder as a package for packgenlite
+    2. data.py - for reading of data from the raw_data folder ( as mentioned earlier gitignored due to file size ) and also data cleaning.
+    3. encoders.py - feature engineering based on given data
+    4. trainer.py - building and training of model
+    5. utils.py - utility functions to separate out from trainer.py   
+2.  notebook - Jupyter Notebook for testing and trial run.
+3.  predict.py - To predict the taxi fare price based on saved model.
 
-The initial setup.
+# Problem Statement
+The task is to predict the taxi fare based on the pick up location, drop off location, and pick up timing. Benchmark model for this challenge can be seen as per this [linear model](https://www.kaggle.com/code/dster/nyc-taxi-fare-starter-kernel-simple-linear-model/notebook). The benchmark RMSE is 5.74 as per given linear model, and we aim to do that with further tuning and exploration of other machining learning models, and also any deep learning model if possible.
 
-Create virtualenv and install the project:
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv ~/venv ; source ~/venv/bin/activate ;\
-    pip install pip -U; pip install -r requirements.txt
-```
+# 1. Data Extraction and Exploration
+Initial exploration of data is conducted by dropping of outliers, illogical data ( trip with 0 passengers, negative fares etc... ). We check the correlation of the data with the fare amount. It shows that distance is most correlated with fare amount as hypothesized with a correlation of 89.26% (range of 0 to 1, therefore 0.8926).
 
-Unittest test:
-```bash
-make clean install test
-```
+<p align="center">
+  <img width="460" height="300" src="image/corr_fare-vs-feature.png"/><img height="300"  src="image/corr-value.png"/>
+</p>
 
-Check for TaxiFareModel in gitlab.com/{group}.
-If your project is not set please add it:
+Please note that the distance is calculated using longitude and latitude and therefore not taken into consideration during analysis of correlation of individual features. Else parameters like day of week, hour, month, years are all extracted from pickup timing. 
 
-- Create a new project on `gitlab.com/{group}/TaxiFareModel`
-- Then populate it:
+A quick showcase of the average taxi fare when compiled against by passenger count or day of week, both shows that the average taxi fare are more or less the same. This shows the effect of passenger count and day of week on the taxi fare is minimal.
 
-```bash
-##   e.g. if group is "{group}" and project_name is "TaxiFareModel"
-git remote add origin git@github.com:{group}/TaxiFareModel.git
-git push -u origin master
-git push -u origin --tags
-```
+<p align="center">
+  <img width="600" height="200" src="image/avg_fare-by-ppl.png"/>
+</p>
+<p align="center">
+  <img width="600" height="200" src="image/fare-vs-dow.png"/>
+</p>
+Else, if compared to the scatter plot of the taxi fare when plotted against distance, there is an obvious linear pattern that can be identified through the graph.
 
-Functionnal test with a script:
+<p align="center">
+  <img width="460" height="300" src="image/fare-vs-dist.png">
+</p>
 
-```bash
-cd
-mkdir tmp
-cd tmp
-TaxiFareModel-run
-```
+The second feature most highly correlated with fare amount will be year attribute extracted from pick up time. This is presume due to the rising taxi fare cost by inflation. The correlation of year and taxi fare is only around 11%.
 
-# Install
+![image](image/fare-vs-year.png)
 
-Go to `https://github.com/{group}/TaxiFareModel` to see the project, manage issues,
-setup you ssh public key, ...
+# 2. Model building and training
+A pipeline was build using scikit-learn. It includes distance transformer for distance calculation, standardscaler for standardization, and one hot encoding for the features extracted from the pickup time.  
+RandomizedSearchCV is used to determine the best model, and MLflow is being used to track all the parameters results. After comparison, RandomForestRegressor is shown to have the best result, an average RMSE of 4.298. The optimum hyperparameters is also determined using the same method. Tuned model after train_test_split of 0.15, the model after train and evaluate is able to achieve RMSE of 4.376. 
 
-Create a python3 virtualenv and activate it:
-
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv -ppython3 ~/venv ; source ~/venv/bin/activate
-```
-
-Clone the project and install it:
-
-```bash
-git clone git@github.com:{group}/TaxiFareModel.git
-cd TaxiFareModel
-pip install -r requirements.txt
-make clean install test                # install and test
-```
-Functionnal test with a script:
-
-```bash
-cd
-mkdir tmp
-cd tmp
-TaxiFareModel-run
-```
