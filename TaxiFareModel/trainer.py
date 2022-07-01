@@ -45,10 +45,10 @@ class Trainer():
         ])
         return pipe
 
-    def run(self,model, params):
+    def run(self,model):
         """set and train the pipeline"""
         self.pipeline = self.set_pipeline(model)
-        self.pipeline = RandomizedSearchCV(self.pipeline, params, scoring='neg_root_mean_squared_error')
+        # self.pipeline = RandomizedSearchCV(self.pipeline, params, scoring='neg_root_mean_squared_error')
         self.pipeline.fit(self.X, self.y)
 
     def evaluate(self, X_test, y_test):
@@ -138,7 +138,34 @@ if __name__ == "__main__":
         # print(f'round {1+i}')
 
     # build pipeline
-    trainer = Trainer(X_train,y_train)
+    trainer = Trainer(X,y)
+
+    params= {
+        "RandomForestRegressor__max_depth":9,
+        "RandomForestRegressor__min_samples_split":2,
+        "RandomForestRegressor__max_features":None,
+        "RandomForestRegressor__min_impurity_decrease":0,
+        "RandomForestRegressor__n_estimators":120,
+        "RandomForestRegressor__min_samples_leaf":6,
+        "RandomForestRegressor__min_weight_fraction_leaf":0,
+        "RandomForestRegressor__max_leaf_nodes":5
+    }
 
     # train the pipeline
-    trainer.run(RandomForestRegressor(),params)
+    trainer.run(RandomForestRegressor(max_depth=9,
+        min_samples_split=2,
+        max_features=None,
+        min_impurity_decrease=0,
+        n_estimators=120,
+        min_samples_leaf=6,
+        min_weight_fraction_leaf=0,
+        max_leaf_nodes=5))
+
+    # # evaluate the pipeline
+    # rmse = trainer.evaluate(X_val, y_val)
+    # trainer.mlflow_log_metric("rmse",rmse)
+    # trainer.mlflow_log_param("model","Tuned RandomForestRegressor")
+
+    filename = "model.joblib"
+    joblib.dump(trainer.pipeline, filename)
+    print("completed")

@@ -1,14 +1,15 @@
 import pandas as pd
 
-FILE_PATH = "../raw_data/train.csv"
-TEST_FILE_PATH ="../raw_data/test.csv"
+FILE_PATH = "raw_data/train.csv"
+TEST_FILE_PATH ="raw_data/test.csv"
 
 def get_data(nrows=10_000, test=False):
     '''returns a DataFrame with nrows from s3 bucket'''
     if test:
         df = pd.read_csv(TEST_FILE_PATH)
     else:
-        df = pd.read_csv(FILE_PATH, nrows=nrows)
+        # df = pd.read_csv(FILE_PATH, nrows=nrows)
+        df = pd.read_csv(FILE_PATH)
     return df
 
 

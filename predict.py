@@ -6,13 +6,13 @@ import pandas as pd
 
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-PATH_TO_LOCAL_MODEL = 'model/model.joblib'
+PATH_TO_LOCAL_MODEL = 'TaxiFareModel/model.joblib'
 
 def get_test_data():
     """method to get the training data (or a portion of it) from google cloud bucket
     To predict we can either obtain predictions from train data or from test data"""
     # Add Client() here
-    path = "../data-challenges/07-Data-Engineering/02-ML-Iteration/01-Kaggle-Taxi-Fare/data/test.csv"
+    path = "raw_data/test.csv"
     df = pd.read_csv(path)
     return df
 
