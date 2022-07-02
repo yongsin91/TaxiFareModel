@@ -3,10 +3,14 @@ import joblib
 import requests
 import datetime
 import pytz
+import pandas as pd
+import os
 
 '''
 # New York Taxi Fare Prediction
 '''
+
+@st.cache(suppress_st_warning=True)
 def coordinates(input):
     """Checks whether the address entered is valid and extracts the
     coordinates through an API
@@ -14,7 +18,7 @@ def coordinates(input):
 
     api = 'https://nominatim.openstreetmap.org/search'
 
-    if input is not "":
+    if input!="" and input.isalpha():
         if "new york" not in input.lower():
             input = input + " New York"
         if "united states" not in input.lower():
@@ -37,7 +41,7 @@ def coordinates(input):
                 please copy the intended address below into the query box:*")
         for index, address in enumerate(response[:3]):
             st.markdown(f"""`{index + 1})  {address['display_name']}`""")
-    elif len(response) == 0 and input != "":
+    elif len(response) == 0 and input!="":
         st.write("*No addresses were found. Please refine your search.*")
 
     return -9999, -9999
@@ -66,41 +70,39 @@ d_lon, d_lat = coordinates(d_add)
 
 predict = st.button("Predict Taxi Fare")
 
-model = joblib.load('TaxiFareModel/model.joblib')
+model = joblib.load(os.path.dirname(__file__) + "TaxiFareModel/model.joblib")
 
+if predict:
 
-if p_add!="" and d_add!="" and predict:
-    if p_add == d_add :
-        st.markdown("0 Fare since same address")
-    params=dict(pickup_datetime=date_and_time,
-            pickup_longitude=p_lon,
-            pickup_latitude=p_lat,
-            dropoff_longitude=d_lon,
-            dropoff_latitude=d_lat,
-            passenger_count=int(a))
+    if p_add == d_add:
+        st.markdown("## $0 Fare")
+    elif p_add!="" and d_add!="":
+        params=dict(pickup_datetime=date_and_time,
+                pickup_longitude=p_lon,
+                pickup_latitude=p_lat,
+                dropoff_longitude=d_lon,
+                dropoff_latitude=d_lat,
+                passenger_count=int(a))
 
-    ############################################################################
-# Loading model directly
-############################################################################
+        # Modifying the format of params['pickup_datetime'] as per requirements in the model
+        # localize the user provided datetime with the NYC timezone
+        eastern = pytz.timezone("US/Eastern")
+        localized_pickup_datetime = eastern.localize(params['pickup_datetime'], is_dst=None)
+        # convert the user datetime to UTC
+        utc_pickup_datetime = localized_pickup_datetime.astimezone(pytz.utc)
+        # format the datetime as expected by the pipeline
+        params['pickup_datetime'] = utc_pickup_datetime.strftime("%Y-%m-%d %H:%M:%S UTC")
 
-## Modifying the format of params['pickup_datetime'] as per requirements in the model
-# localize the user provided datetime with the NYC timezone
-    eastern = pytz.timezone("US/Eastern")
-    localized_pickup_datetime = eastern.localize(params['pickup_datetime'], is_dst=None)
-    # convert the user datetime to UTC
-    utc_pickup_datetime = localized_pickup_datetime.astimezone(pytz.utc)
-    # format the datetime as expected by the pipeline
-    params['pickup_datetime'] = utc_pickup_datetime.strftime("%Y-%m-%d %H:%M:%S UTC")
+        # Fixing a value for the key, as the pipeline was created with the original dataset
+        # which contains a key column. This column was dropped later on in the pipeline
+        # and not used in training the model.
+        key='2020-07-03 23:00:00.000000001'
+        X_pred = pd.DataFrame(params, index=[0])
+        st.markdown(f"{X_pred}")
+        X_pred.insert(loc=0, column='key', value=key)
+        fare = float(model.predict(X_pred).round(2))
 
-    # Fixing a value for the key, as the pipeline was created with the original dataset
-    # which contains a key column. This column was dropped later on in the pipeline
-    # and not used in training the model.
-    key='2013-07-06 17:18:00.000000119'
-    X_pred = pd.DataFrame(params, index=[0])
-    X_pred.insert(loc=0, column='key', value=key)
-    model = joblib.load(os.path.dirname(__file__) + "/../joblib/model.joblib")
-    fare = float(model.predict(X_pred).round(2))
-    st.markdown(f'## Predicted fare: `{fare}`')
+        st.markdown(f'## Predicted fare: `${fare}`')
 
-else:
-    st.markdown("Invalid Input. Please enter both input and before clicking predict again.")
+    else:
+        st.markdown("Invalid Input. Please enter both input and before clicking predict again.")
