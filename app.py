@@ -34,16 +34,16 @@ def coordinates(input):
             return lon, lat
 
     if len(nyc_add) == 1:
-        st.markdown("*We found one possible address. Please confirm or refine\
-                your search. When confirmed, please copy the address into the query box:*")
+        st.markdown("*Found 1 possible address. Please refine your search if it is incorrect.\
+                    If it is correct, please copy and paste the address into the input box*")
         st.markdown(f"""`{nyc_add[0]['display_name']}`""")
     elif len(nyc_add) > 1:
-        st.write("*We found multiple possible addresses. Please refine your search if not listed or\
-                please copy the intended address below into the query box:*")
+        st.write("*Found multiple possible addresses. Please refine your search if it is not listed.\
+                Else, please copy the intended address into the input box:*")
         for index, address in enumerate(nyc_add[:3]):
             st.markdown(f"""`{index + 1})  {address['display_name']}`""")
     elif len(nyc_add) == 0 and input!="":
-        st.write("*No addresses were found. Please refine your search.*")
+        st.write("*No address were found. Please refine your search.*")
 
     return -1000, -1000
 
