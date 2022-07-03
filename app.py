@@ -52,8 +52,6 @@ The address available for prediction will be within New York, United States only
 
 '''
 ## User Input
-
-1. Date Time
 '''
 col1, col2, col3 = st.columns(3)
 d = col1.date_input("Input Date")
@@ -72,9 +70,9 @@ predict = st.button("Predict Taxi Fare")
 if predict:
 
     if p_lon+p_lat+d_lon+d_lat<-900:
-        st.markdown("## Error! Please enter a valid address.")
+        st.markdown("### Error! Please enter a valid address.")
     elif p_add == d_add:
-        st.markdown("## $0 Fare")
+        st.markdown("### $0 Fare")
     elif p_add=="" and d_add=="":
         st.markdown("Invalid Input. Please enter both input and before clicking predict again.")
     else:
@@ -102,6 +100,9 @@ if predict:
         key='2020-07-03 23:00:00.000000001'
         X_pred = pd.DataFrame(params, index=[0])
         X_pred.insert(loc=0, column='key', value=key)
-        fare = float(model.predict(X_pred).round(2))
-        print(X_pred.to_markdown())
-        st.markdown(f'## Predicted fare: `${fare}`')
+        fare = model.predict(X_pred)[0].round(2)
+        if fare==41.89:
+            st.markdown("### Range is too large. ")
+            st.markdown("### Please input a location within New York City.")
+        else:
+            st.markdown(f'### Predicted fare: `${fare}`')
