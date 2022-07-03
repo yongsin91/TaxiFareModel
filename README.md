@@ -70,4 +70,4 @@ The model is saved as joblib and deployed directly with streamlit due to its sma
 - Currently the model only works for predicting taxi fare within New York City. It'll be able to calculate taxifare of other cities too when trained with the dataset of the other cities.
 - Currently the model is only trained on 1 million of the data due to limitations. The model can be more accurate if it can be trained with all data through Cloud or Google Colab. 
 
-# The model is hosted through Heroku ([Please Link Here](https://taxifare-yongsin91.herokuapp.com/))
+### The sample model website can be accessed through this link ([NYC Taxi Prediction Interface](https://taxifare-yongsin91.herokuapp.com/))
