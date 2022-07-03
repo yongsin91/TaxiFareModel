@@ -46,7 +46,8 @@ def coordinates(input):
 
 st.markdown('''
 The prediction of taxi fare in New York City. The dataset is based on \
-[Kaggle New York Taxi Fare Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction/overview)
+[Kaggle New York Taxi Fare Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction/overview). \
+The address available for prediction will be within New York, United States only.
 ''')
 
 '''
@@ -68,19 +69,23 @@ d_lon, d_lat = coordinates(d_add)
 
 predict = st.button("Predict Taxi Fare")
 
-model = joblib.load(os.path.dirname(__file__) + "TaxiFareModel/model.joblib")
-
 if predict:
 
-    if p_add == d_add:
+    if p_lon+p_lat+d_lon+d_lat<-900:
+        st.markdown("## Error! Please enter a valid address.")
+    elif p_add == d_add:
         st.markdown("## $0 Fare")
-    elif p_add!="" and d_add!="":
+    elif p_add=="" and d_add=="":
+        st.markdown("Invalid Input. Please enter both input and before clicking predict again.")
+    else:
         params=dict(pickup_datetime=date_and_time,
                 pickup_longitude=p_lon,
                 pickup_latitude=p_lat,
                 dropoff_longitude=d_lon,
                 dropoff_latitude=d_lat,
                 passenger_count=int(a))
+
+        model = joblib.load(os.path.dirname(__file__) + "TaxiFareModel/model.joblib")
 
         # Modifying the format of params['pickup_datetime'] as per requirements in the model
         # localize the user provided datetime with the NYC timezone
@@ -98,8 +103,5 @@ if predict:
         X_pred = pd.DataFrame(params, index=[0])
         X_pred.insert(loc=0, column='key', value=key)
         fare = float(model.predict(X_pred).round(2))
-
+        print(X_pred.to_markdown())
         st.markdown(f'## Predicted fare: `${fare}`')
-
-    else:
-        st.markdown("Invalid Input. Please enter both input and before clicking predict again.")
