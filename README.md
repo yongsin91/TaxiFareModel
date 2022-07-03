@@ -1,5 +1,5 @@
 # NYC - Taxi Fare Prediction 
-This project an attempt to build a complete package on predicting the New York Taxi Fare (inclusive of tolls), based on the [Kaggle Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction). This is a playground competition, hosted in partnership with Google Cloud and Coursera.
+This project is an attempt to build a complete package on predicting the New York Taxi Fare (inclusive of tolls), based on the [Kaggle Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction). This is a playground competition, hosted in partnership with Google Cloud and Coursera.
 While basic estimate based on just the distance between the two points will result in an RMSE of $5-$8, depending on the model used. The challenge is to do better using Machine Learning techniques!
 
 Original Train and Test file can be found through this kaggle [link](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction/data). It is not uploaded due to the file size (5GB). 
