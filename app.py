@@ -6,6 +6,9 @@ import pytz
 import pandas as pd
 import os
 
+st.set_page_config(page_title='New York Taxi Fare Prediction',
+                   page_icon =None, initial_sidebar_state = 'auto')
+
 '''
 # New York Taxi Fare Prediction
 '''
@@ -45,9 +48,9 @@ def coordinates(input):
     return -1000, -1000
 
 st.markdown('''
-The prediction of taxi fare in New York City. The dataset is based on \
-[Kaggle New York Taxi Fare Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction/overview). \
-The address available for prediction will be within New York, United States only.
+This server is for the demonstration of the prediction of taxi fare in New York City. This model is currently trained on \
+the dataset of [Kaggle New York Taxi Fare Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction/overview). \
+Currently this taxi fare prediction model is only possible for areas within New York City of United States.
 ''')
 
 '''
@@ -103,6 +106,6 @@ if predict:
         fare = model.predict(X_pred)[0].round(2)
         if fare==41.89:
             st.markdown("### Range is too large. ")
-            st.markdown("### Please input a location within New York City.")
+            st.markdown("### Please input a location within New York City only.")
         else:
             st.markdown(f'### Predicted fare: `${fare}`')
