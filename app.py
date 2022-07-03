@@ -10,41 +10,39 @@ import os
 # New York Taxi Fare Prediction
 '''
 
-@st.cache(suppress_st_warning=True)
 def coordinates(input):
     """Checks whether the address entered is valid and extracts the
     coordinates through an API
     """
 
     api = 'https://nominatim.openstreetmap.org/search'
-
-    if input!="" and input.isalpha():
-        if "new york" not in input.lower():
-            input = input + " New York"
-        if "united states" not in input.lower():
-            input = input + " United States"
-
     response = requests.get(api, params={'q':input, 'format':'json'}).json()
 
-    for add in response:
-        if add['display_name'].lower() == input:
-            lon = float(add['lon'])
-            lat = float(add['lat'])
+    nyc_add = []
+    for address in response:
+        address_split = address['display_name'].split(', ')
+        if "United States" in address_split and "New York" in address_split:
+            nyc_add.append(address)
+
+    for ny_add in nyc_add:
+        if ny_add['display_name'].lower() == input:
+            lon = float(ny_add['lon'])
+            lat = float(ny_add['lat'])
             return lon, lat
 
-    if len(response) == 1:
+    if len(nyc_add) == 1:
         st.markdown("*We found one possible address. Please confirm or refine\
                 your search. When confirmed, please copy the address into the query box:*")
-        st.markdown(f"""`{response[0]['display_name']}`""")
-    elif len(response) > 1:
+        st.markdown(f"""`{nyc_add[0]['display_name']}`""")
+    elif len(nyc_add) > 1:
         st.write("*We found multiple possible addresses. Please refine your search if not listed or\
                 please copy the intended address below into the query box:*")
-        for index, address in enumerate(response[:3]):
+        for index, address in enumerate(nyc_add[:3]):
             st.markdown(f"""`{index + 1})  {address['display_name']}`""")
-    elif len(response) == 0 and input!="":
+    elif len(nyc_add) == 0 and input!="":
         st.write("*No addresses were found. Please refine your search.*")
 
-    return -9999, -9999
+    return -1000, -1000
 
 st.markdown('''
 The prediction of taxi fare in New York City. The dataset is based on \
@@ -98,7 +96,6 @@ if predict:
         # and not used in training the model.
         key='2020-07-03 23:00:00.000000001'
         X_pred = pd.DataFrame(params, index=[0])
-        st.markdown(f"{X_pred}")
         X_pred.insert(loc=0, column='key', value=key)
         fare = float(model.predict(X_pred).round(2))
 
