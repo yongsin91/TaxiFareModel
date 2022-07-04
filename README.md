@@ -1,5 +1,5 @@
 # NYC - Taxi Fare Prediction 
-This project an attempt to build a complete package on predicting the New York Taxi Fare (inclusive of tols), based on the [Kaggle Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction). This is a playground competition, hosted in partnership with Google Cloud and Coursera.
+This project is an attempt to build a complete package on predicting the New York Taxi Fare (inclusive of tolls), based on the [Kaggle Challenge](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction). This is a playground competition, hosted in partnership with Google Cloud and Coursera.
 While basic estimate based on just the distance between the two points will result in an RMSE of $5-$8, depending on the model used. The challenge is to do better using Machine Learning techniques!
 
 Original Train and Test file can be found through this kaggle [link](https://www.kaggle.com/competitions/new-york-city-taxi-fare-prediction/data). It is not uploaded due to the file size (5GB). 
@@ -46,5 +46,28 @@ The second feature most highly correlated with fare amount will be year attribut
 
 # 2. Model building and training
 A pipeline was build using scikit-learn. It includes distance transformer for distance calculation, standardscaler for standardization, and one hot encoding for the features extracted from the pickup time.  
-RandomizedSearchCV is used to determine the best model, and MLflow is being used to track all the parameters results. After comparison, RandomForestRegressor is shown to have the best result, an average RMSE of 4.298. The optimum hyperparameters is also determined using the same method. Tuned model after train_test_split of 0.15, the model after train and evaluate is able to achieve RMSE of 4.376. 
+RandomizedSearchCV is used to determine the best model, and MLflow is being used to track all the parameters results. After comparison, RandomForestRegressor is shown to have the best result, an average RMSE of 4.298. The optimum hyperparameters is also determined using the same method. Tuned model after train_test_split of 0.15, the model after train and evaluate is able to achieve RMSE of 4.644. 
 
+# 3. Prediction and Deployment
+The model is saved as joblib and deployed directly with streamlit due to its small size. The whole package is then hosted onto Heroku. Due to limitations the model is currently trained on 1 million rows.
+
+## Input stage
+- User are required to key in the Date & Time, Number of passengers, Pickup & Dropoff Address in order to predict. 
+- User after input their location and press enter, the input will be send to the API to check for places that matched and it will be shown below.
+- For multiple areas with similar names, all names will be listed for selection. User is required to copy the intended address to paste back into the input box.
+- If the intended address is not listed, User is required to refine their search.
+
+## Prediction Stage
+- Once all input is confirmed, click the predict button and the calculated fare will be shown.
+- Error or invalid fare notification appears when the input address is not within New York City, or illogical address ( e.g. empty or random symbols )
+
+
+|Input stage|Prediction stage|
+|:---|:---|
+|![image](image/webpage.png)|![image](image/webpage%20-%20predicted%20fare.png)|
+
+# 4. Limitations and Improvements
+- Currently the model only works for predicting taxi fare within New York City. It'll be able to calculate taxifare of other cities too when trained with the dataset of the other cities.
+- Currently the model is only trained on 1 million of the data due to limitations. The model can be more accurate if it can be trained with all data through Cloud or Google Colab. 
+
+### The sample model website can be accessed through this link ([NYC Taxi Prediction Interface](https://taxifare-yongsin91.herokuapp.com/))
