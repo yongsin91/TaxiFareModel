@@ -25,16 +25,7 @@ Initial exploration of data is conducted by dropping of outliers, illogical data
 </p>
 
 Please note that the distance is calculated using longitude and latitude and therefore not taken into consideration during analysis of correlation of individual features. Else parameters like day of week, hour, month, years are all extracted from pickup timing. 
-
-A quick showcase of the average taxi fare when compiled against by passenger count or day of week, both shows that the average taxi fare are more or less the same. This shows the effect of passenger count and day of week on the taxi fare is minimal.
-
-<p align="center">
-  <img width="600" height="200" src="image/avg_fare-by-ppl.png"/>
-</p>
-<p align="center">
-  <img width="600" height="200" src="image/fare-vs-dow.png"/>
-</p>
-Else, if compared to the scatter plot of the taxi fare when plotted against distance, there is an obvious linear pattern that can be identified through the graph.
+The exploration of the relationships of other variables against taxi fare can be seen from the [Jupyter Notebook](notebooks/Taxi-Fare-Model.ipynb). Here, we'll only show the scatter plot of the taxi fare when plotted against distance, where there is an obvious linear pattern that can be identified through the graph.
 
 <p align="center">
   <img width="460" height="300" src="image/fare-vs-dist.png">
