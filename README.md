@@ -15,7 +15,7 @@ Original Train and Test file can be found through this kaggle [link](https://www
 3.  predict.py - To predict the taxi fare price based on saved model.
 
 # Problem Statement
-The task is to predict the taxi fare based on the pick up location, drop off location, and pick up timing. Benchmark model for this challenge can be seen as per this [linear model](https://www.kaggle.com/code/dster/nyc-taxi-fare-starter-kernel-simple-linear-model/notebook). The benchmark RMSE is 5.74 as per given linear model, and we aim to do that with further tuning and exploration of other machining learning models, and also any deep learning model if possible.
+The task is to predict the taxi fare based on the pick up location, drop off location, and pick up timing. Benchmark model for this challenge can be seen as per this [linear model](https://www.kaggle.com/code/dster/nyc-taxi-fare-starter-kernel-simple-linear-model/notebook). The benchmark RMSE is 5.74 as per given linear model, and we aim to do that with further tuning and exploration of other machine learning models, and also any deep learning model if possible.
 
 # 1. Data Extraction and Exploration
 Initial exploration of data is conducted by dropping of outliers, illogical data ( trip with 0 passengers, negative fares etc... ). We check the correlation of the data with the fare amount. It shows that distance is most correlated with fare amount as hypothesized with a correlation of 89.26% (range of 0 to 1, therefore 0.8926).
