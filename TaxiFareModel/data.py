@@ -1,16 +1,22 @@
 import pandas as pd
 
 FILE_PATH = "raw_data/train.csv"
-TEST_FILE_PATH ="raw_data/test.csv"
+TEST_FILE_PATH = "raw_data/test.csv"
 
 def get_data(nrows=10_000, test=False):
-    '''returns a DataFrame with nrows from s3 bucket'''
-    if test:
-        df = pd.read_csv(TEST_FILE_PATH)
-    else:
-        # df = pd.read_csv(FILE_PATH, nrows=nrows)
-        df = pd.read_csv(FILE_PATH)
-    return df
+    """Return a DataFrame with ``nrows`` rows.
+
+    Parameters
+    ----------
+    nrows : int, default=10_000
+        Number of rows of file to read. This value is passed to
+        :func:`pandas.read_csv`.
+    test : bool, default=False
+        Whether to load the test dataset instead of the training dataset.
+    """
+
+    file_path = TEST_FILE_PATH if test else FILE_PATH
+    return pd.read_csv(file_path, nrows=nrows)
 
 
 def clean_data(df, test=False):
